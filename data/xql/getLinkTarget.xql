@@ -35,6 +35,16 @@ declare variable $uri := request:get-parameter('uri', '');
 (: FUNCTION DECLARATIONS =================================================== :)
 
 (:~
+ : Returns the URI of a version of a file for Adelson e Salvini
+ :)
+declare function local:getReadingDocUri($docUri as xs:string, $version as xs:string) as xs:string {
+    let $fileNameWithExt := tokenize($docUri, '/')[last()]
+    let $fileName := replace($fileNameWithExt, '\.xml$', '') (: strip .xml :)
+    let $basePath := substring-before($docUri, $fileNameWithExt)
+    return $basePath || $fileName || "/" || $fileName || "_" || $version || ".xml"
+};
+
+(:~
  : Returns a view for an edirom object
  :)
 declare function local:getView($type as xs:string, $docUri as xs:string, $doc as document-node()?) as map(*)? {
@@ -124,7 +134,7 @@ declare function local:getView($type as xs:string, $docUri as xs:string, $doc as
 (:~
  : Returns the views for an edirom object
  :)
-declare function local:getViews($type as xs:string, $docUri as xs:string, $doc as document-node()?) as map(*)* {
+declare function local:getViews($type as xs:string, $docUri as xs:string, $doc as document-node()?, $version as xs:string) as map(*)* {
     
     let $views := (
         (:'desc_summaryView',:)
@@ -144,8 +154,13 @@ declare function local:getViews($type as xs:string, $docUri as xs:string, $doc a
     
     let $maps :=
         for $view in $views
+        let $readingDocUri :=
+        if ($view = 'tei_textView' and $version != '') then
+            local:getReadingDocUri($docUri, $version)
+        else
+            $docUri
         return
-            local:getView($view, $docUri, $doc)
+            local:getView($view, $readingDocUri, $doc)
     
     return
         $maps
@@ -223,7 +238,7 @@ let $uriParams :=
 
 let $uri :=
     if (contains($uri, '?')) then
-        (replace($uri, '[?&amp;](term|path)=[^&amp;]*', ''))
+        (replace($uri, '[?&amp;](version|term|path)=[^&amp;]*', ''))
     else
         ($uri)
 
@@ -274,6 +289,19 @@ let $path :=
         (substring-before($path, '&amp;'))
     else
         ($path)
+
+(: Handling of apparatus with alternative readings for Adelson e Salvini :)
+let $version :=
+    if (contains($uriParams, 'version=')) then
+        (substring-after($uriParams, 'version='))
+    else
+        ''
+
+let $version :=
+    if (contains($version, '&amp;')) then
+        (substring-before($version, '&amp;'))
+    else
+        ($version)
 
 let $doc := eutil:getDoc($docUri)
 
@@ -333,9 +361,13 @@ let $internalIdType :=
 let $map :=
     map {
         'type': $type,
-        'title': local:getWindowTitle($doc, $type),
+        'title': 
+            if ($version != '') then
+                local:getWindowTitle($doc, $type) || " (" || $version || ")"
+            else
+                local:getWindowTitle($doc, $type),
         'doc': $docUri,
-        'views': array {local:getViews($type, $docUri, $doc)},
+        'views': array {local:getViews($type, $docUri, $doc, $version)},
         'internalId': $internalId || $internalIdParam,
         'term': $term,
         'path': $path,
