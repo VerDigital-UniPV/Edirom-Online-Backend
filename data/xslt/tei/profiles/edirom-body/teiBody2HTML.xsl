@@ -425,10 +425,10 @@
                         </xsl:otherwise>
                     </xsl:choose>
                 </xsl:variable>
-                <xsl:element name="{if (tei:isInline(..)) then 'span' else 'div'}">
+<!--                 <xsl:element name="{if (tei:isInline(..)) then 'span' else 'div'}">
                     <xsl:call-template name="rendToClass"/>
                     <img src="{$IMG}" alt="page image"/>
-                </xsl:element>
+                </xsl:element> -->
             </xsl:when>
             <xsl:when test="$pagebreakStyle='active'">
                 <div class="pagebreak">
@@ -699,6 +699,30 @@
             <xsl:apply-templates/>
         </div>
     </xsl:template>
+    <!-- If a sic element is followed by a correction, just print
+        the correction, otherwise, print "[sic]" after  -->
+    <xsl:template match="tei:sic" priority="5">
+        <xsl:choose>
+        <xsl:when test="not(following-sibling::tei:corr)">
+            <xsl:apply-templates/>
+            <span class="sic">
+                <xsl:text>[sic]</xsl:text>
+            </span>
+        </xsl:when>
+        <xsl:otherwise>
+        <!-- Do nothing: hide text content -->
+        </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    <xsl:template match="tei:corr" priority="5">
+        <xsl:choose>        
+            <xsl:when test="preceding-sibling::tei:sic">
+                <xsl:apply-templates/>
+            </xsl:when>
+        </xsl:choose>
+    </xsl:template>
+
+<!--    
     <xsl:template match="tei:sic" priority="5">
         <xsl:apply-templates/>
         <xsl:if test="not(following-sibling::tei:corr)">
@@ -715,7 +739,7 @@
         <span class="corr end">
             <xsl:text>]</xsl:text>
         </span>
-    </xsl:template>
+    </xsl:template> -->
     <doc xmlns="http://www.oxygenxml.com/ns/doc/xsl">
         <desc>[html] <param name="value">the current segment of the value of the rend
                 attribute</param><param name="rest">the remainder of the attribute</param> modified
