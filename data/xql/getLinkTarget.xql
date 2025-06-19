@@ -99,6 +99,10 @@ declare function local:getView($type as xs:string, $docUri as xs:string, $doc as
         
         else if ($type = 'mei_verovioView') then
             (exists($doc//mei:body//mei:measure) and exists($doc//mei:body//mei:note))
+
+        else if ($type = 'mei_alternativesView') then
+            (exists($doc//mei:body//mei:measure) and exists($doc//mei:body//mei:note))
+            (: TODO add more conditions on this new view (for example, if there are rdg, or a specific flag in the mei file):)
         
         else if ($type = 'tei_textView') then
             (exists($doc//tei:body[matches(.//text(), '[^\s]+')]))
@@ -143,6 +147,7 @@ declare function local:getViews($type as xs:string, $docUri as xs:string, $doc a
         'mei_sourceView',
         'mei_audioView',
         'mei_verovioView',
+        'mei_alternativesView',
         'tei_textView',
         'tei_facsimileView',
         'tei_textFacsimileSplitView',
