@@ -499,6 +499,32 @@
             <xsl:apply-templates/>
         </xsl:element>
     </xsl:template>
+
+<!-- Template to process <sg> exactly like <sp> -->  
+<xsl:template match="tei:sg" priority="5">
+    <div>
+        <xsl:attribute name="class">
+            <xsl:text>singer </xsl:text>
+            <xsl:value-of select="normalize-space(tei:singer)"/>
+        </xsl:attribute>
+        <xsl:call-template name="makeAnchor"/>
+        <xsl:apply-templates select="tei:singer"/>
+        <xsl:if test="tei:singer/following-sibling::*[1][@rend = 'inline']">
+            &#160;<xsl:apply-templates
+                select="tei:singer/following-sibling::tei:stage[@rend = 'inline'][1]"
+            />
+        </xsl:if>
+    </div>
+    <xsl:apply-templates
+        select="tei:*[not(self::tei:singer) and not(self::tei:stage[@rend = 'inline'][1])]"/>
+</xsl:template>
+ 
+  
+<!-- Template to process <singer> exactly like <speaker> -->  
+<xsl:template match="tei:singer">  
+    <xsl:apply-templates select="." mode="singer"/>  
+</xsl:template>
+
     <xsl:template match="tei:lb" priority="5">
         <xsl:choose>
             <xsl:when test="parent::tei:body"/>
