@@ -87,6 +87,8 @@ let $xsl :=
         ($xslInstruction)
     else
         ('../xslt/tei/profiles/edirom-body/teiBody2HTML.xsl')
+        (:('../xslt/tei/profiles/edirom-body/teiBody2HTMLFaust.xsl'):)
+        (:('../xslt/tei/profiles/edirom-body/teiBody2HTMLBellini.xsl'):)
 
 (:TODO introduce injection-point for tei-stylesheet parameters :)
 let $params := (
@@ -119,11 +121,4 @@ let $doc := transform:transform($doc, doc($xsl), <parameters>{$params}</paramete
 let $body := $doc//xhtml:body
 
 return
-    element div {
-        for $attribute in $body/@*
-        return
-            $attribute,
-        for $node in $body/node()
-        return
-            $node
-    }
+    $doc
