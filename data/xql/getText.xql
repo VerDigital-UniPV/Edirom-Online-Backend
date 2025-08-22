@@ -87,8 +87,6 @@ let $xsl :=
         ($xslInstruction)
     else
         ('../xslt/tei/profiles/edirom-body/teiBody2HTML.xsl')
-        (:('../xslt/tei/profiles/edirom-body/teiBody2HTMLFaust.xsl'):)
-        (:('../xslt/tei/profiles/edirom-body/teiBody2HTMLBellini.xsl'):)
 
 (:TODO introduce injection-point for tei-stylesheet parameters :)
 let $params := (
