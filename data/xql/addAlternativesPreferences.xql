@@ -4,11 +4,23 @@ import module namespace request="http://exist-db.org/xquery/request";
 import module namespace xmldb="http://exist-db.org/xquery/xmldb";
 import module namespace util="http://exist-db.org/xquery/util";
 
+declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
+
+(: OPTION DECLARATIONS ===================================================== :)
+
+declare option output:method "xml";
+declare option output:media-type "text/xml";
+declare option output:omit-xml-declaration "no";
+declare option output:indent "yes";
+
 (: --- Parameters --- :)
 let $edition := request:get-parameter("edition", ())
 let $target  := request:get-parameter("target", ())
 let $name    := request:get-parameter("name", ())
 let $query   := request:get-parameter("query", ())
+
+(: --- Authentication (find another solution with different user in production server) --- :)
+let $login := xmldb:login("/db", "admin", "changeme")
 
 (: --- Resolve doc path --- :)
 let $doc-path :=

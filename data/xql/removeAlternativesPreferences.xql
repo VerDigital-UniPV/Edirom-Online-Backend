@@ -3,6 +3,15 @@ xquery version "3.1";
 import module namespace request="http://exist-db.org/xquery/request";
 import module namespace xmldb="http://exist-db.org/xquery/xmldb";
 
+declare namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
+
+(: OPTION DECLARATIONS ===================================================== :)
+
+declare option output:method "xml";
+declare option output:media-type "text/xml";
+declare option output:omit-xml-declaration "no";
+declare option output:indent "yes";
+
 let $edition := request:get-parameter("edition", ())
 let $target := request:get-parameter("target", ())
 let $name   := request:get-parameter("name", ())
