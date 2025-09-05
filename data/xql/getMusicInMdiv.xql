@@ -35,7 +35,7 @@ return
     (:TODO eventually dynamically use sources @meiversion? :)
     <mei xmlns="http://www.music-encoding.org/ns/mei"
         xmlns:xlink="http://www.w3.org/1999/xlink"
-        meiversion="4.0.0">
+        meiversion="5.1">
         {$mei//mei:meiHead}
         <music>
             <facsimile/>

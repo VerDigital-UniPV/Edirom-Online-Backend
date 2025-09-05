@@ -579,10 +579,13 @@
                 <xsl:with-param name="default">l</xsl:with-param>
             </xsl:call-template>
             <xsl:choose>
-                <xsl:when test="ancestor::tei:div[contains(@rend,'linenumber')]">
+                <xsl:when test="true()">
+                    <!--Compute the line number-->
                     <xsl:variable name="n">
-                        <xsl:number/>
+                        <xsl:number level="any" count="tei:l[not(@part='F') and not(@part='M')]"/>
                     </xsl:variable>
+                    <!--Alternatively use the encoded line number:-->
+                    <!--<xsl:variable name="n" select="number(@n)"/>-->
                     <div class="numbering">
                         <xsl:choose>
                             <xsl:when test="$n mod 5 = 0">
