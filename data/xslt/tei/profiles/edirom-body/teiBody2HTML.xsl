@@ -594,7 +594,20 @@
                             <xsl:otherwise>&#160;</xsl:otherwise>
                         </xsl:choose>
                     </div>
-                    <xsl:apply-templates/>
+                    <xsl:choose>
+                        <!-- First line of a strophe -->
+                        <xsl:when test="count(preceding-sibling::*) = 0">
+                            <div class="l-content first-line">
+                                <xsl:apply-templates/>
+                            </div>
+                        </xsl:when>
+                        <!-- Other lines -->
+                        <xsl:otherwise>
+                            <div class="l-content">
+                                <xsl:apply-templates/>
+                            </div>
+                        </xsl:otherwise>
+                    </xsl:choose>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:apply-templates/>
