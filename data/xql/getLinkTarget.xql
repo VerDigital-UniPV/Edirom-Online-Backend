@@ -160,7 +160,7 @@ declare function local:getViews($type as xs:string, $docUri as xs:string, $doc a
     let $maps :=
         for $view in $views
         let $readingDocUri :=
-        if (($view = 'tei_textView' or $view = 'html_iFrameView') and $version != '') then
+        if (($view = 'tei_textView' or $view = 'html_iFrameView' or $view = 'tei_facsimileView' or $view = 'tei_textFacsimileSplitView') and $version != '') then
             local:getReadingDocUri($docUri, $version)
         else
             $docUri
