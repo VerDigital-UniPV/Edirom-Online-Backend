@@ -39,6 +39,7 @@ let $page := request:get-parameter('page', '')
 let $doc := eutil:getDoc($uri)/root()
 let $contextPath := request:get-scheme()|| "://" || request:get-server-name() || ":" || request:get-server-port() || request:get-context-path()
 let $xslInstruction := $doc//processing-instruction(xml-stylesheet)
+let $omitLineNumbering := request:get-parameter('omitLineNumbering', 'false')
 
 let $xslInstruction :=
     for $i in fn:serialize($xslInstruction, ())
@@ -102,7 +103,8 @@ let $params := (
     <param name="documentationLanguage" value="{edition:getLanguage($edition)}"/>,
     <param name="footnoteBackLink" value="true"/>,
     <param name="numberHeadings" value="false"/>,
-    <param name="pageLayout" value="CSS"/>
+    <param name="pageLayout" value="CSS"/>,
+    <param name="omitLineNumbering" value="{$omitLineNumbering}"/>
 )
 
 let $doc := transform:transform($doc, doc($xsl), <parameters>{$params}</parameters>)

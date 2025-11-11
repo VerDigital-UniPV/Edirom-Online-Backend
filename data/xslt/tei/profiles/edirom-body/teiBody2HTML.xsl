@@ -12,6 +12,7 @@
     <xsl:param name="base"  select="'../../../'" as="xs:string"/>
     <xsl:param name="docUri" as="xs:anyURI"/>
     <xsl:param name="contextPath" as="xs:string"/>
+    <xsl:param name="omitLineNumbering" as="xs:boolean" select="false()"/>
     <!-- OVERWRITE FOLLOWING TEI-PARAMS -->
     <!-- END OVERWRITE TEI-PARAMS -->
     <!-- FREIDI PARAMETER -->
@@ -588,7 +589,7 @@
                     <!--<xsl:variable name="n" select="number(@n)"/>-->
                     <div class="numbering">
                         <xsl:choose>
-                            <xsl:when test="$n mod 5 = 0">
+                            <xsl:when test="$n mod 5 = 0 and not($omitLineNumbering)">
                                 <xsl:value-of select="$n"/>
                             </xsl:when>
                             <xsl:otherwise>&#160;</xsl:otherwise>
@@ -632,7 +633,7 @@
                     </xsl:variable>
                     <div class="numbering">
                         <xsl:choose>
-                            <xsl:when test="$n mod 5 = 0">
+                            <xsl:when test="$n mod 5 = 0 and not($omitLineNumbering)">
                                 <xsl:value-of select="$n"/>
                             </xsl:when>
                             <xsl:otherwise>&#160;</xsl:otherwise>
